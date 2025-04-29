@@ -1,0 +1,218 @@
+---
+title: 'Mini Project 1'
+subtitle: "PSTAT100: Data Science Concepts and Analysis" 
+
+author: "Instructor: Ali Abuzaid"
+format: 
+ pdf:
+    latex_engine: xelatex
+    geometry: "letterpaper, margin=0.3in"
+    code-fold: true
+    code-line-numbers: true
+    code-copy: true
+    code-tools: true
+    self-contained: true
+    toc: false
+    toc-location: left
+    number-sections: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message =  FALSE)
+knitr::opts_chunk$set(warning =  FALSE)
+knitr::opts_chunk$set(error =  FALSE)
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{\\textbf{%s}}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+:::callout
+**STUDENT NAME **
+
+- Xinyao Song    (6194773)
+- STUDENT 2    (NetID 2)
+- STUDENT 3    (NetID 3)
+:::
+
+:::{.callout-tip}
+# Instructions
+
+* This mini project aims to familiarize you with real-life data sourced from various resources.
+
+* The mini project includes narrative questions. While these questions are primarily based on lecture material and prerequisites, they may also require independent thinking and investigation.
+
+* Collaborate in groups of **2-3** students from the **same section**; individual submissions **will not be accepted**.
+
+* Please use the provided `MP 1.qmd` file to type your solutions and submit the completed assignment as a PDF file. You can utilize `RStudio`for this purpose. For guidance, refer to the [Tutorial: Hello, Quarto](https://quarto.org/docs/get-started/hello/rstudio.html)).
+
+* Submit your answers via **Gradescope**.
+
+* Ensure that all `R` code, mathematical formulas, and workings are presented clearly and appropriately.
+
+* All figures should be numbered, and axes must be labeled.
+
+:::
+
+:::{.callout-caution}
+# Due Date
+**Due Date:** Sunday, May 4, 2025, 11:59 PM
+:::
+
+
+
+
+\newpage
+:::{.callout-tip}
+# Survey (Use the attached 'Survey.xlsx' file)
+
+The data was collected during the first lecture from 85 students in the PSTAT 100 class in Spring 2025. The survey has 6 main sections namely Personal Information, Physical Measurements, Health Habits, Diet and Nutrition, Mental Health and Stress, and Academic Life.
+
+These sections are interconnected - for example, physical measurements may relate to health habits and diet, while academic life may impact mental health and sleep patterns.The goal is to explore the relevant variables that may affect students' performance.
+:::
+
+
+:::{.callout-important}
+# **Question 1**
+
+Based on your understanding of the collected data, propose three questions or hypotheses that can be explored or tested using the data.
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 1:", "red")` \
+
+**Hypothesis 1:** Whether the amount of sleep a student gets is associated with their GPA.  
+$H_0:$ The amount of sleep a student gets does not affects with their GPA ($\mu_{\text{<4 hours}} = \mu_{\text{4-6 hours}} = \mu_{\text{6–8 hours}} = \mu_{\text{>8 hours}}$).  
+$H_A:$ The amount of sleep a student gets does not affects with their GPA (at least one sleep group has a different mean GPA).  
+
+**Hypothesis 2:** Whether the amount of physical exercise a student does affects their sleep duration.  
+$H_0:$ There is no association between the amount of exercise and the amount of sleep ($\text{Exercise} \perp \text{Sleep}$).  
+$H_A:$ There is an association between the amount of exercise and the amount of sleep ($\text{Exercise} \not\perp \text{Sleep}$).  
+
+**Hypothesis 3:** Whether a student's stress level influences their likelihood of consuming alcohol.  
+$H_0:$ There is no association between stress level and alcohol consumption ($\text{Stress} \perp \text{Alcohol}$).  
+$H_A:$ There is an association between stress level and alcohol consumption ($\text{Stress} \not\perp \text{Alcohol}$).   
+
+
+
+\newpage
+:::{.callout-important}
+# **Question 2** 
+
+Load the data into `R`, obtain basic descriptive statistics for the numerical variables, and provide your interpretation of the results.
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 2:", "red")` \
+
+```{r}
+library(readxl)
+library(dplyr)
+
+survey <- read_excel("Survey.xlsx")
+numeric_var <- survey %>% select(where(is.numeric))
+summary(numeric_var)
+```
+Among all the variables in the Survey dataset, there are a total of four numerical variables, which include weight, height, stress, and GPA.  
+
+- From the summary statistics above, we can see that the weight is likely measured in pounds, with the minimum weight being 106 pounds and the maximum being 390. We can see that there is a significant difference between the third quartile and the maximum weight value, this may suggest that the data is right-skewed or that there are outliers on the higher end. 
+- On the other hand, the height variable seems a little inconsistent in formatting given the minimum value being 5 and the maximum value being 511. It's possible that most data were recorded in feet-inches, and that entries like 511 were meant to represent "5 feet 11 inches" but were entered without a decimal. There is also a huge spread between the third quartile and the maximum value, which may suggest that there are multiple entry errors that need to be fixed. 
+- While the stress levels are divided into 10 levels, we can see that they are rather even throughout each quartile. One thing to note is that while there is a maximum stress level of 10, the minimum stress inputted is 2, not 1. 
+- Finally, for GPA, we can see that nearly 75% of the data lies above a 3.3 GPA. There seems to be a huge gap between the minimum value and the 1st quartile. Since this is a survey, we might need to take a closer look into voluntary bias, as students with lower GPA may not be willing to share their data. 
+
+\newpage
+:::{.callout-important}
+# **Question 3** 
+a- Identify any missing values in the `Survey` dataset.
+
+b- Assess the missing data mechanism in the dataset.
+
+c- How would you handle the identified missing values? Save the treated dataset as `SurveyMissing`?
+
+d- Can you address any potential bias for this missing values?
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 3:", "red")` \
+
+a. 
+```{r}
+colSums(is.na(survey))
+```
+From the summary above, we see that there are 2 missing values in Alcohol, 3 missing values in GPA, and 5 missing values in Health.
+
+b. 
+The missing data for GPA is likely due to MNAR, as there is a huge gap between the minimum value and the first quartile, and students with lower GPAs are less likely to report it. On the other hand, the missing values in the Health variable are most likely due to MAR, as the survey question is "Do you feel your academic workload affects your health?". This question may have some students finding vague or hard to interpret, leading them to skip the question. Nevertheless, this missing value in Health can potentially be explained by the participants' GPA or stress levels. Finally, the missing values in Alcohol can be explained by either MNAR or MAR. It is MNAR as some students may not want to share their alcohol consumption due to their age or social environment. Alternatively, it can also be MAR if the variable is related to stress or other observed factors.
+
+c. 
+Since GPA is additive and bounded, we will use arithmetic mean imputation to handle the identified missing values. This method works well in this situation, as GPA only has a very small proportion of missing values. However, this method can still introduce bias and distort the distribution of the dataset.
+
+```{r}
+SurveyMissing <- survey %>%
+  mutate(
+    GPA = ifelse(is.na(GPA), mean(GPA, na.rm = TRUE), GPA),
+  )
+```
+
+d. 
+\newpage
+:::{.callout-important}
+# **Question 4** 
+a- Detect and handle outliers in the `Weight` variable of the dataset. 
+
+ i- Justify your outlier detection method (e.g., IQR, Z-score, or visual inspection) and explain your chosen handling strategy (e.g., winsorization, capping, or removal). 
+
+ii -Discuss the potential impact of these outliers on the analysis if left unaddressed.
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 4:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+\newpage
+:::{.callout-important}
+# **Question 5**
+Investigate the relationship between sleep duration (`Sleep`) and perceived stress levels (`Stress`). Address the following:
+
+a- Calculate the average stress level for each sleep duration category and comment.
+
+b- Do certain sleep ranges (e.g., "4–6 hours") correlate with higher/lower stress?
+
+c- Use a boxplot to compare stress distributions across sleep categories and comment!
+
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 5:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+\newpage
+:::{.callout-important}
+# **Question 6**
+Create a visualization to show the distribution of Weight, comment!
+:::
+`r bfcolor("ANSWERS TO QUESTION 6:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+
+\newpage
+:::{.callout-important}
+# **Question 7**
+a. Define a new variable  BMI = $\left(\frac{\text{Weight (lb)}}{\text{Height (in)}^2} \right) \times 703$, and classify students into BMI categories based on Centers for Disease Control and Prevention (CDC) guidelines:
+
+- BMI < 18.5 → `"Underweight"`  
+- 18.5 ≤ BMI < 25 → `"Normal"`  
+- 25 ≤ BMI < 30 → `"Overweight"`  
+- BMI ≥ 30 → `"Obese"`
+
+b- Visualize and describe the distribution of students' BMI categories using a bar chart.
+
+c- Explore the correlations between **BMI**, **GPA**, and **Stress**. Use visualizations and correlation statistics to summarize the relationships.
+
+:::
+`r bfcolor("ANSWERS TO QUESTION 7:", "red")` \
+
+_**Replace this line with your answers**_ \
