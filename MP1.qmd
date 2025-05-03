@@ -137,23 +137,27 @@ d- Can you address any potential bias for this missing values?
 a. 
 ```{r}
 colSums(is.na(survey))
+
 ```
 From the summary above, we see that there are 2 missing values in Alcohol, 3 missing values in GPA, and 5 missing values in Health.
 
 b. 
-The missing data for GPA is likely due to MNAR, as there is a huge gap between the minimum value and the first quartile, and students with lower GPAs are less likely to report it. On the other hand, the missing values in the Health variable are most likely due to MAR, as the survey question is "Do you feel your academic workload affects your health?". This question may have some students finding vague or hard to interpret, leading them to skip the question. Nevertheless, this missing value in Health can potentially be explained by the participants' GPA or stress levels. Finally, the missing values in Alcohol can be explained by either MNAR or MAR. It is MNAR as some students may not want to share their alcohol consumption due to their age or social environment. Alternatively, it can also be MAR if the variable is related to stress or other observed factors.
+The missing data for GPA is likely due to MNAR, as there is a huge gap between the minimum value and the first quartile, and students with lower GPAs are less likely to report it due to pressure or personal reasons. On the other hand, the missing values in the Health variable are most likely due to MAR, as the survey question is "Do you feel your academic workload affects your health?". This question may have some students finding difficult to answer, which may result them in skipping the question. Nevertheless, this missing value in Health may potentially be explained by the participants' GPA or stress levels. Finally, the missing values in Alcohol may be explained by either MNAR or MAR. It is MNAR as some students may not want to share their alcohol consumption due to their age in case of underage drinking or concerns with their social environment. Alternatively, it can also be MAR if the variable can be related to stress or other observed factors.
 
 c. 
-Since GPA is additive and bounded, we will use arithmetic mean imputation to handle the identified missing values. This method works well in this situation, as GPA only has a very small proportion of missing values. However, this method can still introduce bias and distort the distribution of the dataset.
+Since GPA is additive, bounded, and MNAR with a very small proportion of missing values, we will use arithmetic mean imputation to handle the identified missing values as GPA. In terms of the two categorical variables, Alcohol and Health, which are both and potentially MAR, mean imputation or dropping the data would potentially induce bias in the dataset. Some of the better ways to handle it are through inverse probability weighting or modeling the variables with missing observations as functions of other variables. However, since these methods are not covered explicitly, we will mark the missing variables with "Prefer not to Answer" for later analysis that suits the type of the variable.
 
 ```{r}
 SurveyMissing <- survey %>%
   mutate(
     GPA = ifelse(is.na(GPA), mean(GPA, na.rm = TRUE), GPA),
+    Alcohol = ifelse(is.na(Alcohol), "Prefer not to answer", Alcohol),
+    Health = ifelse(is.na(Health), "Prefer not to answer", Health)
   )
 ```
 
-d. 
+d. Since we used mean imputation for GPA by assuming GPA is most likely MCAR, it may still distort the distribution and introduce bias into the dataset. For Alcohol and Health that are categorical, we did not explicitly handle the missing values, as dropping those rows would introduce more bias. Instead, we marked the missing values with "Prefer not to Answer," which preserves the structure of the data and allows us to retain those rows without making assumptions about their true values, enabling better analysis in the future.
+
 \newpage
 :::{.callout-important}
 # **Question 4** 
