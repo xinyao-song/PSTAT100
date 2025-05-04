@@ -35,7 +35,7 @@ bfcolor <- function(x, color) {
 
 -   Xinyao Song (6194773)
 -   Jay Chang (5808498)
--   STUDENT 3 (NetID 3)
+-   Nic Chan (A052038)
 :::
 
 ::: callout-tip
@@ -105,7 +105,7 @@ Load the data into `R`, obtain basic descriptive statistics for the numerical va
 ```{r}
 library(readxl)
 library(dplyr)
-
+library(ggplot2)
 survey <- read_excel("Survey.xlsx")
 numeric_var <- survey %>% select(where(is.numeric))
 summary(numeric_var)
@@ -286,8 +286,17 @@ Create a visualization to show the distribution of Weight, comment!
 
 `r bfcolor("ANSWERS TO QUESTION 6:", "red")`\
 
-***Replace this line with your answers***\
-
+```{r}
+ggplot(data = survey, aes(x = Weight_Capped)) +
+  geom_histogram(binwidth = 25,fill = "darkblue", color = "white") + 
+  xlab("Weight (lbs)") + ylab("Number of Students") +
+  ggtitle("Weight Distribution of Students in PSTAT100") + 
+  theme_minimal() +  scale_x_continuous(breaks = seq(100, 300, by = 25))
+#Create histogram using the ggplot2 package to show the distribution of weight
+#Use Weight_Capped variable to remove outlier
+#Binwidth of 25 and x axis scaled by 25 for better interpretability
+```
+The histogram is made using the Weight_Capped variable which removes the one outlier of 390 pounds. By removing the outlier, the standard deviation and variance of the data is reduced, providing a more accurate representation of the student weight. The histogram reveals a slightly right skewed distribution centered around 150 pounds, which suggests there are some heavier individuals but not enough to significantly alter the data. This data reflects the the average weight of adults ranging from 125 to 175 pounds, which is the bulk of the data.
 \newpage
 
 ::: callout-important
@@ -307,4 +316,55 @@ c- Explore the correlations between **BMI**, **GPA**, and **Stress**. Use visual
 
 `r bfcolor("ANSWERS TO QUESTION 7:", "red")`\
 
-***Replace this line with your answers***\
+```{r}
+#a
+survey <- survey %>%
+  mutate(BMI = round((Weight_Capped / (Height_cleaned^2)) * 703,2))
+survey <- survey %>%
+  mutate(BMI_Category = ifelse(BMI < 18.5, "Underweight",
+                               ifelse(BMI < 25, "Normal",
+                               ifelse(BMI < 30, "Overweight", "Obese"))))
+#b
+ggplot(survey, aes(x = BMI_Category)) +
+  geom_bar(fill = "darkgreen") +
+  xlab("BMI Category") + 
+  ylab("Number of Students") + 
+  ggtitle("BMI Category Distribution") +
+  theme_minimal()
+```
+b. From the barchart it can be seen that the majority of students who took the survey are categorized as "Normal" by the BMI. The next highest category is "Overweight" followed by "Obese" and then by "Underweight". The data shows that most students have a BMI in the recommended range, though it is notable that there are significantly more overweight students compared to underweight students. 
+
+```{r}
+#c
+# Scatter plot of BMI vs GPA
+ggplot(survey, aes(x = BMI, y = GPA)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  ggtitle("BMI vs GPA") +
+  theme_minimal()
+
+# Scatter plot of BMI vs Stress
+ggplot(survey, aes(x = BMI, y = Stress)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  ggtitle("BMI vs Stress") +
+  theme_minimal()
+
+# Scatter plot of GPA vs Stress
+ggplot(survey, aes(x = GPA, y = Stress)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  ggtitle("GPA vs Stress") +
+  theme_minimal()
+
+#Calculating the correlations between the variables
+#Correlation between BMI and GPA
+cor(survey$BMI, survey$GPA, use = "complete.obs")
+
+#Correlation between BMI and Stress
+cor(survey$BMI, survey$Stress, use = "complete.obs")
+
+#Correlation between GPA and Stress
+cor(survey$GPA, survey$Stress, use = "complete.obs")
+```
+c. I created scatter plots to show the relationships between BMI and GPA, BMI and Stress, and GPA and Stress. I then calculated the Pearson's correlation coefficient. The strongest correlation was about -0.45 in the relation between BMI and GPA, which moderately suggests that students with higher BMI may have lower GPA. The correlation value of 0.14 for BMI vs Stress shows a very weak positive correlation meaning there was only a slight tendency for students with higher BMI reporting more stress. Finally, GPA and Stress had a correlation value of -0.21 which suggests a weak negative correlation showing that students with lower GPA may have higher stress levels. Overall, the strongest correlation was between BMI and GPA while the other relations involving stress were relatively weak which indicate that the variables may be loosely connected and that more data should be pulled to find out more.
