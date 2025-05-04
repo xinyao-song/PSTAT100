@@ -16,6 +16,7 @@ format:
     toc-location: left
     number-sections: true
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message =  FALSE)
 knitr::opts_chunk$set(warning =  FALSE)
@@ -29,43 +30,41 @@ bfcolor <- function(x, color) {
 }
 ```
 
-:::callout
-**STUDENT NAME **
+::: callout
+**STUDENT NAME**
 
-- Xinyao Song    (6194773)
-- STUDENT 2    (NetID 2)
-- STUDENT 3    (NetID 3)
+-   Xinyao Song (6194773)
+-   Jay Chang (5808498)
+-   STUDENT 3 (NetID 3)
 :::
 
-:::{.callout-tip}
+::: callout-tip
 # Instructions
 
-* This mini project aims to familiarize you with real-life data sourced from various resources.
+-   This mini project aims to familiarize you with real-life data sourced from various resources.
 
-* The mini project includes narrative questions. While these questions are primarily based on lecture material and prerequisites, they may also require independent thinking and investigation.
+-   The mini project includes narrative questions. While these questions are primarily based on lecture material and prerequisites, they may also require independent thinking and investigation.
 
-* Collaborate in groups of **2-3** students from the **same section**; individual submissions **will not be accepted**.
+-   Collaborate in groups of **2-3** students from the **same section**; individual submissions **will not be accepted**.
 
-* Please use the provided `MP 1.qmd` file to type your solutions and submit the completed assignment as a PDF file. You can utilize `RStudio`for this purpose. For guidance, refer to the [Tutorial: Hello, Quarto](https://quarto.org/docs/get-started/hello/rstudio.html)).
+-   Please use the provided `MP 1.qmd` file to type your solutions and submit the completed assignment as a PDF file. You can utilize `RStudio`for this purpose. For guidance, refer to the [Tutorial: Hello, Quarto](https://quarto.org/docs/get-started/hello/rstudio.html)).
 
-* Submit your answers via **Gradescope**.
+-   Submit your answers via **Gradescope**.
 
-* Ensure that all `R` code, mathematical formulas, and workings are presented clearly and appropriately.
+-   Ensure that all `R` code, mathematical formulas, and workings are presented clearly and appropriately.
 
-* All figures should be numbered, and axes must be labeled.
-
+-   All figures should be numbered, and axes must be labeled.
 :::
 
-:::{.callout-caution}
+::: callout-caution
 # Due Date
+
 **Due Date:** Sunday, May 4, 2025, 11:59 PM
 :::
 
-
-
-
 \newpage
-:::{.callout-tip}
+
+::: callout-tip
 # Survey (Use the attached 'Survey.xlsx' file)
 
 The data was collected during the first lecture from 85 students in the PSTAT 100 class in Spring 2025. The survey has 6 main sections namely Personal Information, Physical Measurements, Health Habits, Diet and Nutrition, Mental Health and Stress, and Academic Life.
@@ -73,37 +72,35 @@ The data was collected during the first lecture from 85 students in the PSTAT 10
 These sections are interconnected - for example, physical measurements may relate to health habits and diet, while academic life may impact mental health and sleep patterns.The goal is to explore the relevant variables that may affect students' performance.
 :::
 
-
-:::{.callout-important}
+::: callout-important
 # **Question 1**
 
 Based on your understanding of the collected data, propose three questions or hypotheses that can be explored or tested using the data.
 :::
 
-`r bfcolor("ANSWERS TO QUESTION 1:", "red")` \
+`r bfcolor("ANSWERS TO QUESTION 1:", "red")`\
 
-**Hypothesis 1:** Whether the amount of sleep a student gets is associated with their GPA.  
-$H_0:$ The amount of sleep a student gets does not affects with their GPA ($\mu_{\text{<4 hours}} = \mu_{\text{4-6 hours}} = \mu_{\text{6–8 hours}} = \mu_{\text{>8 hours}}$).  
-$H_A:$ The amount of sleep a student gets does not affects with their GPA (at least one sleep group has a different mean GPA).  
+**Hypothesis 1:** Whether the amount of sleep a student gets is associated with their GPA.\
+$H_0:$ The amount of sleep a student gets does not affects with their GPA ($\mu_{\text{<4 hours}} = \mu_{\text{4-6 hours}} = \mu_{\text{6–8 hours}} = \mu_{\text{>8 hours}}$).\
+$H_A:$ The amount of sleep a student gets does not affects with their GPA (at least one sleep group has a different mean GPA).
 
-**Hypothesis 2:** Whether the amount of physical exercise a student does affects their sleep duration.  
-$H_0:$ There is no association between the amount of exercise and the amount of sleep ($\text{Exercise} \perp \text{Sleep}$).  
-$H_A:$ There is an association between the amount of exercise and the amount of sleep ($\text{Exercise} \not\perp \text{Sleep}$).  
+**Hypothesis 2:** Whether the amount of physical exercise a student does affects their sleep duration.\
+$H_0:$ There is no association between the amount of exercise and the amount of sleep ($\text{Exercise} \perp \text{Sleep}$).\
+$H_A:$ There is an association between the amount of exercise and the amount of sleep ($\text{Exercise} \not\perp \text{Sleep}$).
 
-**Hypothesis 3:** Whether a student's stress level influences their likelihood of consuming alcohol.  
-$H_0:$ There is no association between stress level and alcohol consumption ($\text{Stress} \perp \text{Alcohol}$).  
-$H_A:$ There is an association between stress level and alcohol consumption ($\text{Stress} \not\perp \text{Alcohol}$).   
-
-
+**Hypothesis 3:** Whether a student's stress level influences their likelihood of consuming alcohol.\
+$H_0:$ There is no association between stress level and alcohol consumption ($\text{Stress} \perp \text{Alcohol}$).\
+$H_A:$ There is an association between stress level and alcohol consumption ($\text{Stress} \not\perp \text{Alcohol}$).
 
 \newpage
-:::{.callout-important}
-# **Question 2** 
+
+::: callout-important
+# **Question 2**
 
 Load the data into `R`, obtain basic descriptive statistics for the numerical variables, and provide your interpretation of the results.
 :::
 
-`r bfcolor("ANSWERS TO QUESTION 2:", "red")` \
+`r bfcolor("ANSWERS TO QUESTION 2:", "red")`\
 
 ```{r}
 library(readxl)
@@ -113,16 +110,19 @@ survey <- read_excel("Survey.xlsx")
 numeric_var <- survey %>% select(where(is.numeric))
 summary(numeric_var)
 ```
-Among all the variables in the Survey dataset, there are a total of four numerical variables, which include weight, height, stress, and GPA.  
 
-- From the summary statistics above, we can see that the weight is likely measured in pounds, with the minimum weight being 106 pounds and the maximum being 390. We can see that there is a significant difference between the third quartile and the maximum weight value, this may suggest that the data is right-skewed or that there are outliers on the higher end. 
-- On the other hand, the height variable seems a little inconsistent in formatting given the minimum value being 5 and the maximum value being 511. It's possible that most data were recorded in feet-inches, and that entries like 511 were meant to represent "5 feet 11 inches" but were entered without a decimal. There is also a huge spread between the third quartile and the maximum value, which may suggest that there are multiple entry errors that need to be fixed. 
-- While the stress levels are divided into 10 levels, we can see that they are rather even throughout each quartile. One thing to note is that while there is a maximum stress level of 10, the minimum stress inputted is 2, not 1. 
-- Finally, for GPA, we can see that nearly 75% of the data lies above a 3.3 GPA. There seems to be a huge gap between the minimum value and the 1st quartile. Since this is a survey, we might need to take a closer look into voluntary bias, as students with lower GPA may not be willing to share their data. 
+Among all the variables in the Survey dataset, there are a total of four numerical variables, which include weight, height, stress, and GPA.
+
+-   From the summary statistics above, we can see that the weight is likely measured in pounds, with the minimum weight being 106 pounds and the maximum being 390. We can see that there is a significant difference between the third quartile and the maximum weight value, this may suggest that the data is right-skewed or that there are outliers on the higher end.
+-   On the other hand, the height variable seems a little inconsistent in formatting given the minimum value being 5 and the maximum value being 511. It's possible that most data were recorded in feet-inches, and that entries like 511 were meant to represent "5 feet 11 inches" but were entered without a decimal. There is also a huge spread between the third quartile and the maximum value, which may suggest that there are multiple entry errors that need to be fixed.
+-   While the stress levels are divided into 10 levels, we can see that they are rather even throughout each quartile. One thing to note is that while there is a maximum stress level of 10, the minimum stress inputted is 2, not 1.
+-   Finally, for GPA, we can see that nearly 75% of the data lies above a 3.3 GPA. There seems to be a huge gap between the minimum value and the 1st quartile. Since this is a survey, we might need to take a closer look into voluntary bias, as students with lower GPA may not be willing to share their data.
 
 \newpage
-:::{.callout-important}
-# **Question 3** 
+
+::: callout-important
+# **Question 3**
+
 a- Identify any missing values in the `Survey` dataset.
 
 b- Assess the missing data mechanism in the dataset.
@@ -132,20 +132,20 @@ c- How would you handle the identified missing values? Save the treated dataset 
 d- Can you address any potential bias for this missing values?
 :::
 
-`r bfcolor("ANSWERS TO QUESTION 3:", "red")` \
+`r bfcolor("ANSWERS TO QUESTION 3:", "red")`\
 
-a. 
+a.  
+
 ```{r}
 colSums(is.na(survey))
 
 ```
+
 From the summary above, we see that there are 2 missing values in Alcohol, 3 missing values in GPA, and 5 missing values in Health.
 
-b. 
-The missing data for GPA is likely due to MNAR, as there is a huge gap between the minimum value and the first quartile, and students with lower GPAs are less likely to report it due to pressure or personal reasons. On the other hand, the missing values in the Health variable are most likely due to MAR, as the survey question is "Do you feel your academic workload affects your health?". This question may have some students finding difficult to answer, which may result them in skipping the question. Nevertheless, this missing value in Health may potentially be explained by the participants' GPA or stress levels. Finally, the missing values in Alcohol may be explained by either MNAR or MAR. It is MNAR as some students may not want to share their alcohol consumption due to their age in case of underage drinking or concerns with their social environment. Alternatively, it can also be MAR if the variable can be related to stress or other observed factors.
+b.  The missing data for GPA is likely due to MNAR, as there is a huge gap between the minimum value and the first quartile, and students with lower GPAs are less likely to report it due to pressure or personal reasons. On the other hand, the missing values in the Health variable are most likely due to MAR, as the survey question is "Do you feel your academic workload affects your health?". This question may have some students finding difficult to answer, which may result them in skipping the question. Nevertheless, this missing value in Health may potentially be explained by the participants' GPA or stress levels. Finally, the missing values in Alcohol may be explained by either MNAR or MAR. It is MNAR as some students may not want to share their alcohol consumption due to their age in case of underage drinking or concerns with their social environment. Alternatively, it can also be MAR if the variable can be related to stress or other observed factors.
 
-c. 
-Since GPA is additive, bounded, and MNAR with a very small proportion of missing values, we will use arithmetic mean imputation to handle the identified missing values as GPA. In terms of the two categorical variables, Alcohol and Health, which are both and potentially MAR, mean imputation or dropping the data would potentially induce bias in the dataset. Some of the better ways to handle it are through inverse probability weighting or modeling the variables with missing observations as functions of other variables. However, since these methods are not covered explicitly, we will mark the missing variables with "Prefer not to Answer" for later analysis that suits the type of the variable.
+c.  Since GPA is additive, bounded, and MNAR with a very small proportion of missing values, we will use arithmetic mean imputation to handle the identified missing values as GPA. In terms of the two categorical variables, Alcohol and Health, which are both and potentially MAR, mean imputation or dropping the data would potentially induce bias in the dataset. Some of the better ways to handle it are through inverse probability weighting or modeling the variables with missing observations as functions of other variables. However, since these methods are not covered explicitly, we will mark the missing variables with "Prefer not to Answer" for later analysis that suits the type of the variable.
 
 ```{r}
 SurveyMissing <- survey %>%
@@ -156,26 +156,121 @@ SurveyMissing <- survey %>%
   )
 ```
 
-d. Since we used mean imputation for GPA by assuming GPA is most likely MCAR, it may still distort the distribution and introduce bias into the dataset. For Alcohol and Health that are categorical, we did not explicitly handle the missing values, as dropping those rows would introduce more bias. Instead, we marked the missing values with "Prefer not to Answer," which preserves the structure of the data and allows us to retain those rows without making assumptions about their true values, enabling better analysis in the future.
+d.  Since we used mean imputation for GPA by assuming GPA is most likely MCAR, it may still distort the distribution and introduce bias into the dataset. For Alcohol and Health that are categorical, we did not explicitly handle the missing values, as dropping those rows would introduce more bias. Instead, we marked the missing values with "Prefer not to Answer," which preserves the structure of the data and allows us to retain those rows without making assumptions about their true values, enabling better analysis in the future.
 
 \newpage
-:::{.callout-important}
-# **Question 4** 
-a- Detect and handle outliers in the `Weight` variable of the dataset. 
 
- i- Justify your outlier detection method (e.g., IQR, Z-score, or visual inspection) and explain your chosen handling strategy (e.g., winsorization, capping, or removal). 
+::: callout-important
+# **Question 4**
+
+a- Detect and handle outliers in the `Weight` variable of the dataset.
+
+i- Justify your outlier detection method (e.g., IQR, Z-score, or visual inspection) and explain your chosen handling strategy (e.g., winsorization, capping, or removal).
 
 ii -Discuss the potential impact of these outliers on the analysis if left unaddressed.
 :::
 
-`r bfcolor("ANSWERS TO QUESTION 4:", "red")` \
+`r bfcolor("ANSWERS TO QUESTION 4:", "red")`\
 
-_**Replace this line with your answers**_ \
+Before answering Question 4, we will address the messy/inconsistent 'Height' values. Upon looking at it, we noticed that many values are incorrect, inconsistent, and very unclear, with some missing decimals and others representing unrealistic values when comparing them to the person's weight and gender, such as a male who weighs 116 pounds, yet is listed as '66' (which we need to determine means 6 foot 6 inches or 66 inches).
+
+To clean this data, we have determined several guidelines to correct and convert all values to inches:
+
+1. If the height listed has a decimal, then assume its in standard feet/inches format, and convert to inches. 
+2. If the height listed is a single number (i.e. 6), then assume its in feet and convert to inches.
+3. If the height listed is greater than 500, then assume it's in feet/inches format and missing a decimal, and convert to inches (i.e. 511 should be 5'11").
+4. If the height listed is greater than 100 but less than 500, then assume it's in centimeters and convert to inches.
+5. If the height listed is 61 or less, then assume that it's missing a decimal and convert to inches (i.e. 56 means 5'6").
+6. If the height listed is greater than 61, then assume that it's already in inches, so no conversion needed. 
+
+```{r}
+convert_height <- function(h_raw) {
+  suppressWarnings({h_raw <- as.numeric(h_raw)
+    
+    if (is.na(h_raw)) {
+      return(NA)
+    } else if (h_raw %% 1 != 0) {
+      # Rule 1: Contains a decimal, feet.inches format
+      ft <- floor(h_raw)
+      inch <- round((h_raw - ft) * 10)  # e.g. 5.7 → 5'7"
+      return(paste0(round(ft * 12 + inch), " in."))
+    } else if (h_raw <= 8) {
+      # Rule 2: single-digit number, feet
+      return(paste0(round(h_raw * 12), " in."))
+    } else if (h_raw > 500) {
+      # Rule 3: >500, missing decimal, feet.inches
+      ft <- floor(h_raw / 100)
+      inch <- h_raw %% 100
+      return(paste0(round(ft * 12 + inch), " in."))
+    } else if (h_raw > 100 && h_raw <= 500) {
+      # Rule 4: 100–500, cm to inches
+      return(paste0(round(h_raw * 0.393701), " in."))
+    } else if (h_raw <= 61 && h_raw > 8) {
+      # Rule 5: ≤61, missing decimal, feet.inches
+      ft <- floor(h_raw / 10)
+      inch <- h_raw %% 10
+      return(paste0(round(ft * 12 + inch), " in."))
+    } else {
+      # Rule 6: >61, already inches
+      return(paste0(round(h_raw), " in."))
+    }
+  })
+}
+
+# Applying function to DataFrame
+survey <- survey %>%
+  mutate(Height_cleaned = sapply(Heigh, convert_height)
+  )
+
+# Displaying cleaned height data vs original heights
+survey %>%
+  select(Heigh, Height_cleaned) %>%
+  head(20) 
+```
+Now, we can see that all our height values under 'Height_cleaned' are correctly converted to inches, are realistic values based on the rest of the data, and uniform. 
+
+Now, we can move onto answering Question 4.
+
+a. When it comes to addressing any outliers in the 'Weight' variable of the dataset, we can detect it using a combination of calculating the IQR and visual inspection and handle it by winsorization/capping. 
+
+```{r}
+# Initial Summary
+summary(survey$Weight)
+
+# Calculating IQR
+Q1 <- quantile(survey$Weight, 0.25, na.rm = TRUE)
+Q3 <- quantile(survey$Weight, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Find outliers based on IQR/bounds
+outliers <- survey %>% filter(Weight < lower_bound | Weight > upper_bound)
+print(outliers$Weight)
+
+# Winsorization: capping extreme values
+survey <- survey %>%
+  mutate(Weight_Capped = ifelse(Weight == 390, upper_bound, Weight))
+```
+i. Through a simple visual inspection, we can see that there aren't that many egregious weight values at all, so this is a very fast and simple way of detecting potential outliers. At the same time, visual inspection allows for us to analyze the data in a deeper, more realistic/personal way, potentially noticing different aspects to our data that could explain inconsistencies or outliers. One value that immediately stands out is 390, which we can safely say is an outlier. Additionally, by calculating the IQR (which doesn't get distorted by extreme values), we are able to find the different quartiles and set a lower and upper bound, allowing for easy detection of outliers. Also, we can use the IQR to make visual representations like boxplots that help see outliers. 
+
+For our handling strategy, we chose to use winsorization/capping because it allows us to keep all data points and maintaining the original sample size. Also, it reduces skewness and the influence of extreme values on sample statistics such as the mean and regressions. 
+```{r}
+# Boxplots
+par(mfrow=c(1,2))
+boxplot(survey$Weight, main = "Original Weight", ylab = "Weight (lbs)")
+boxplot(survey$Weight_Capped, main = "Capped Weight", ylab = "Weight (lbs)")
+```
+However, upon further visual inspection of the outliers we found through the IQR(390 and 250), we see that the value of 250 could be a realistic weight value, especially when comparing it to the height and gender of this particular person (6'4" male). As a result, we have determined that the value of 390 is the only outlier in our dataset, and have handled it accordingly. 
+
+ii. Leaving these outliers can have several adverse effects on our analysis. It can skew summary statistics, where a single high outlier can shoot the mean upward, making it seem like the "typical" or average weight is higher than it actually is. It can also inflate the variance and standard deviation, affecting things like confidence intervals and hypthosis testing. Lastly, it can impact different correlations, such as between Weight and Stress. 
 
 
 \newpage
-:::{.callout-important}
+
+::: callout-important
 # **Question 5**
+
 Investigate the relationship between sleep duration (`Sleep`) and perceived stress levels (`Stress`). Address the following:
 
 a- Calculate the average stress level for each sleep duration category and comment.
@@ -183,40 +278,41 @@ a- Calculate the average stress level for each sleep duration category and comme
 b- Do certain sleep ranges (e.g., "4–6 hours") correlate with higher/lower stress?
 
 c- Use a boxplot to compare stress distributions across sleep categories and comment!
-
 :::
 
-`r bfcolor("ANSWERS TO QUESTION 5:", "red")` \
+`r bfcolor("ANSWERS TO QUESTION 5:", "red")`\
 
-_**Replace this line with your answers**_ \
-
+***Replace this line with your answers***\
 
 \newpage
-:::{.callout-important}
+
+::: callout-important
 # **Question 6**
+
 Create a visualization to show the distribution of Weight, comment!
 :::
-`r bfcolor("ANSWERS TO QUESTION 6:", "red")` \
 
-_**Replace this line with your answers**_ \
+`r bfcolor("ANSWERS TO QUESTION 6:", "red")`\
 
-
+***Replace this line with your answers***\
 
 \newpage
-:::{.callout-important}
-# **Question 7**
-a. Define a new variable  BMI = $\left(\frac{\text{Weight (lb)}}{\text{Height (in)}^2} \right) \times 703$, and classify students into BMI categories based on Centers for Disease Control and Prevention (CDC) guidelines:
 
-- BMI < 18.5 → `"Underweight"`  
-- 18.5 ≤ BMI < 25 → `"Normal"`  
-- 25 ≤ BMI < 30 → `"Overweight"`  
-- BMI ≥ 30 → `"Obese"`
+::: callout-important
+# **Question 7**
+
+a.  Define a new variable BMI = $\left(\frac{\text{Weight (lb)}}{\text{Height (in)}^2} \right) \times 703$, and classify students into BMI categories based on Centers for Disease Control and Prevention (CDC) guidelines:
+
+-   BMI \< 18.5 → `"Underweight"`\
+-   18.5 ≤ BMI \< 25 → `"Normal"`\
+-   25 ≤ BMI \< 30 → `"Overweight"`\
+-   BMI ≥ 30 → `"Obese"`
 
 b- Visualize and describe the distribution of students' BMI categories using a bar chart.
 
 c- Explore the correlations between **BMI**, **GPA**, and **Stress**. Use visualizations and correlation statistics to summarize the relationships.
-
 :::
-`r bfcolor("ANSWERS TO QUESTION 7:", "red")` \
 
-_**Replace this line with your answers**_ \
+`r bfcolor("ANSWERS TO QUESTION 7:", "red")`\
+
+***Replace this line with your answers***\
