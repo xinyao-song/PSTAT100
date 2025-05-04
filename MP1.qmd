@@ -176,12 +176,12 @@ Before answering Question 4, we will address the messy/inconsistent 'Height' val
 
 To clean this data, we have determined several guidelines to correct and convert all values to inches:
 
-1. If the height listed has a decimal, then assume its in standard feet/inches format, and convert to inches. 
-2. If the height listed is a single number (i.e. 6), then assume its in feet and convert to inches.
-3. If the height listed is greater than 500, then assume it's in feet/inches format and missing a decimal, and convert to inches (i.e. 511 should be 5'11").
-4. If the height listed is greater than 100 but less than 500, then assume it's in centimeters and convert to inches.
-5. If the height listed is 61 or less, then assume that it's missing a decimal and convert to inches (i.e. 56 means 5'6").
-6. If the height listed is greater than 61, then assume that it's already in inches, so no conversion needed. 
+1.  If the height listed has a decimal, then assume its in standard feet/inches format, and convert to inches.
+2.  If the height listed is a single number (i.e. 6), then assume its in feet and convert to inches.
+3.  If the height listed is greater than 500, then assume it's in feet/inches format and missing a decimal, and convert to inches (i.e. 511 should be 5'11").
+4.  If the height listed is greater than 100 but less than 500, then assume it's in centimeters and convert to inches.
+5.  If the height listed is 61 or less, then assume that it's missing a decimal and convert to inches (i.e. 56 means 5'6").
+6.  If the height listed is greater than 61, then assume that it's already in inches, so no conversion needed.
 
 ```{r}
 convert_height <- function(h_raw) {
@@ -193,45 +193,45 @@ convert_height <- function(h_raw) {
       # Rule 1: Contains a decimal, feet.inches format
       ft <- floor(h_raw)
       inch <- round((h_raw - ft) * 10)  # e.g. 5.7 → 5'7"
-      return(paste0(round(ft * 12 + inch), " in."))
+      return(round(ft * 12 + inch))
     } else if (h_raw <= 8) {
       # Rule 2: single-digit number, feet
-      return(paste0(round(h_raw * 12), " in."))
+      return(round(h_raw * 12))
     } else if (h_raw > 500) {
       # Rule 3: >500, missing decimal, feet.inches
       ft <- floor(h_raw / 100)
       inch <- h_raw %% 100
-      return(paste0(round(ft * 12 + inch), " in."))
+      return(round(ft * 12 + inch))
     } else if (h_raw > 100 && h_raw <= 500) {
       # Rule 4: 100–500, cm to inches
-      return(paste0(round(h_raw * 0.393701), " in."))
+      return(round(h_raw * 0.393701))
     } else if (h_raw <= 61 && h_raw > 8) {
       # Rule 5: ≤61, missing decimal, feet.inches
       ft <- floor(h_raw / 10)
       inch <- h_raw %% 10
-      return(paste0(round(ft * 12 + inch), " in."))
+      return(round(ft * 12 + inch))
     } else {
       # Rule 6: >61, already inches
-      return(paste0(round(h_raw), " in."))
+      return(round(h_raw))
     }
   })
 }
 
 # Applying function to DataFrame
 survey <- survey %>%
-  mutate(Height_cleaned = sapply(Heigh, convert_height)
-  )
-
+  mutate(Height_cleaned = sapply(Heigh, convert_height))
+  
 # Displaying cleaned height data vs original heights
 survey %>%
   select(Heigh, Height_cleaned) %>%
   head(20) 
 ```
-Now, we can see that all our height values under 'Height_cleaned' are correctly converted to inches, are realistic values based on the rest of the data, and uniform. 
+
+Now, we can see that all our height values under 'Height_cleaned' are correctly converted to inches, are realistic values based on the rest of the data, and uniform.
 
 Now, we can move onto answering Question 4.
 
-a. When it comes to addressing any outliers in the 'Weight' variable of the dataset, we can detect it using a combination of calculating the IQR and visual inspection and handle it by winsorization/capping. 
+a.  When it comes to addressing any outliers in the 'Weight' variable of the dataset, we can detect it using a combination of calculating the IQR and visual inspection and handle it by winsorization/capping.
 
 ```{r}
 # Initial Summary
@@ -252,19 +252,11 @@ print(outliers$Weight)
 survey <- survey %>%
   mutate(Weight_Capped = ifelse(Weight == 390, upper_bound, Weight))
 ```
-i. Through a simple visual inspection, we can see that there aren't that many egregious weight values at all, so this is a very fast and simple way of detecting potential outliers. At the same time, visual inspection allows for us to analyze the data in a deeper, more realistic/personal way, potentially noticing different aspects to our data that could explain inconsistencies or outliers. One value that immediately stands out is 390, which we can safely say is an outlier. Additionally, by calculating the IQR (which doesn't get distorted by extreme values), we are able to find the different quartiles and set a lower and upper bound, allowing for easy detection of outliers. Also, we can use the IQR to make visual representations like boxplots that help see outliers. 
+Although we found 250 as one of the outliers based on IQR, upon further visual inspection we see that the value of 250 could be a realistic weight value, especially when comparing it to the height and gender of this particular person (6'4" male). As a result, we have determined that the value of 390 is the only outlier in our dataset, and have handled it accordingly.
 
-For our handling strategy, we chose to use winsorization/capping because it allows us to keep all data points and maintaining the original sample size. Also, it reduces skewness and the influence of extreme values on sample statistics such as the mean and regressions. 
-```{r}
-# Boxplots
-par(mfrow=c(1,2))
-boxplot(survey$Weight, main = "Original Weight", ylab = "Weight (lbs)")
-boxplot(survey$Weight_Capped, main = "Capped Weight", ylab = "Weight (lbs)")
-```
-However, upon further visual inspection of the outliers we found through the IQR(390 and 250), we see that the value of 250 could be a realistic weight value, especially when comparing it to the height and gender of this particular person (6'4" male). As a result, we have determined that the value of 390 is the only outlier in our dataset, and have handled it accordingly. 
+i.  Through a simple visual inspection, we can see that there aren't that many egregious weight values at all, so this is a very fast and simple way of detecting potential outliers. At the same time, visual inspection allows for us to analyze the data in a deeper, more realistic/personal way, potentially noticing different aspects to our data that could explain inconsistencies or outliers. One value that immediately stands out is 390, which we can safely say is an outlier. Additionally, by calculating the IQR (which doesn't get distorted by extreme values), we are able to find the different quartiles and set a lower and upper bound, allowing for easy detection of outliers. Also, we can use the IQR to make visual representations like boxplots that help see outliers. For our handling strategy, we chose to use winsorization/capping because it allows us to keep all data points and maintaining the original sample size. Also, it reduces skewness and the influence of extreme values on sample statistics such as the mean and regressions. 
 
-ii. Leaving these outliers can have several adverse effects on our analysis. It can skew summary statistics, where a single high outlier can shoot the mean upward, making it seem like the "typical" or average weight is higher than it actually is. It can also inflate the variance and standard deviation, affecting things like confidence intervals and hypthosis testing. Lastly, it can impact different correlations, such as between Weight and Stress. 
-
+ii. Leaving these outliers can have several adverse effects on our analysis. It can skew summary statistics, where a single high outlier can shoot the mean upward, making it seem like the "typical" or average weight is higher than it actually is. It can also inflate the variance and standard deviation, affecting things like confidence intervals and hypthosis testing. Lastly, it can impact different correlations, such as between Weight and Stress.
 
 \newpage
 
