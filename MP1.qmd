@@ -106,6 +106,7 @@ Load the data into `R`, obtain basic descriptive statistics for the numerical va
 library(readxl)
 library(dplyr)
 library(ggplot2)
+library(stringr)
 survey <- read_excel("Survey.xlsx")
 numeric_var <- survey %>% select(where(is.numeric))
 summary(numeric_var)
