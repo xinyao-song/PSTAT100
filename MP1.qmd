@@ -274,7 +274,44 @@ c- Use a boxplot to compare stress distributions across sleep categories and com
 
 `r bfcolor("ANSWERS TO QUESTION 5:", "red")`\
 
-***Replace this line with your answers***\
+a. Our first step in investigating the relationship between sleep duration and perceived stress levels is calculating the average stress level for each sleep duration category.
+
+```{r}
+# Ensuring stress is numeric
+survey <- survey %>%
+  mutate(Stress = as.numeric(Stress))
+
+# Grouping by each Sleep category and calculating avg stress
+sleep_stress_avg <- survey %>%
+  filter(!is.na(Sleep), !is.na(Stress)) %>%
+  group_by(Sleep) %>%
+  summarise(
+    avg_stress = round(mean(Stress), 2),
+    count = n()
+  ) %>%
+  arrange(Sleep)
+
+print(sleep_stress_avg)
+```
+At face value, we can see that the average stress levels vary from category to category, but not too much, and doens't dip under 5. We can also see that there seems to be a correlation between amount of sleep and stress levels, but we will address this in the next part. 
+ 
+b. As we can see from the summary of average stress level for each 'Sleep' category, the results make sense, and we can see that there is a clear correlation between certain sleep ranges and higher/lower stress levels. People sleeping for less than 6 hours have higher overall average stress levels, with those sleeping less than 4 hours having the highest stress levels. In contrast, those sleeping a sufficient amount (more than 6 hours) have lower stress levels, with those sleeping the most (more than 8 hours) having the lowest average stress levels, which makes sense.
+
+c. Now, we can make a boxplot to have a visual representation to compare stress and sleep categories.
+
+```{r}
+# Making the boxplot
+ggplot(survey, aes(x = Sleep, y = Stress, fill = Sleep)) +
+  geom_boxplot() +
+  labs(
+    title = "Stress Distributions Across Sleep Categories",
+    x = "Sleep Duration",
+    y = "Stress Level"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+Upon looking at these boxplots, we have a solid visual representation of the stress distributions. Justifying our explanation in the previous part, we can see that the average stress levels are lower for the higher sleep categories (more than 6 hours), and are higher for the sleep categories where they sleep less than 6 hours. Additionally, we can see outliers for the '4-6 hours' sleep category, showing us that some who sleep this amount can have low stress levels, but others can have very high, further justifying that fewer hours of sleep correlates to higher stress levels and vice versa.
 
 \newpage
 
